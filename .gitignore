@@ -1,0 +1,8 @@
+.idea/
+__pycache__/
+venv/
+.empty/
+*.egg-info/
+user.json
+cart.pkl
+wishlist-info.pkl
