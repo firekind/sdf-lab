@@ -9,6 +9,7 @@ class ProductFactory:
         :param products_meta: a list containing information about the products
         :return: list of `Product` objects
         """
+
         products = []
         for product in products_meta:
             products.append(ProductFactory.create_product(product))
@@ -29,5 +30,6 @@ class ProductFactory:
                 id_=product_meta[0],
                 name=product_meta[1],
                 price=product_meta[2],
-                manu_name=product_meta[3]
+                manu_name=product_meta[3],
+                category=product_meta[4]
         )

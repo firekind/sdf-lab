@@ -108,6 +108,9 @@ def addtocart(prodname, quantity):
     init_user()
 
     product_meta = search.search_item(prodname)
+    if not product_meta:
+        print("Product not available.")
+        return
     search_res = ProductFactory.create_product(product_meta[0])
     to_add = CartItem(search_res, quantity)
     User.get_current_user().cart.add_item(to_add)
@@ -131,6 +134,9 @@ def addtowishlist(prodname, wishlist):
     init_user()
 
     product_meta = search.search_item(prodname)
+    if not product_meta:
+        print("Product not available.")
+        return
     search_res = ProductFactory.create_product(product_meta[0])
     try:
         User.get_current_user().get_wishlist(wishlist).add_item(search_res)
@@ -202,12 +208,14 @@ def placeorder():
         print(cart_item)
     print(f"Total: {cart.total_price}")
 
+    offer = input("Select offer:\n1) Offer 1\t2) Offer 2\n3) None\n: ")
+
     payment_method = input("Select payment method:\n1) Cash On Delivery\t2) Cart\n3) Debit\t\t4) UPI\n: ")
 
     choice = input("Do you want to proceed? (y/n): ")
     if choice == 'n':
         return
-    if User.get_current_user().place_order(payment_method):
+    if User.get_current_user().place_order(payment_method, offer):
         print("Order placed.")
     else:
         print("Error placing order.")
@@ -228,6 +236,30 @@ def createwishlist(name):
     User.get_current_user().create_wishlist(name)
     User.get_current_user().save_wishlists()
     print("Wishlist created.")
+
+
+@cli.command()
+@click.argument('prodname')
+@click.argument('rating', type=click.INT)
+def rate(prodname, rating):
+    """
+    rates a product.
+    :param prodname: the full name of the product to be rated.
+    :param rating: the rating to give.
+    :return: None
+    """
+    if rating < 0 or rating > 5:
+        print("Invalid value. rating should be between 0 and 5.")
+        return
+    if not AuthAPI.is_logged_in():
+        print("Please log in before rating a product.")
+        return
+    init_user()
+
+    product_meta = search.search_item(prodname)
+    search_res = ProductFactory.create_product(product_meta[0])
+    search_res.rate(rating)
+    print("The product has been rated.")
 
 
 def init():

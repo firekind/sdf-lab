@@ -21,9 +21,12 @@ class DatabaseAPI:
         :return: True, if successful authentication, False otherwise
         """
         res = self.db.execute('select password from users where name=?', [username])
-        if res[0][0] == password:
-            return True
-        return False
+        try:
+            if res[0][0] == password:
+                return True
+            return False
+        except IndexError:
+            raise AuthenticationException()
 
     def create_user(self, username, password):
         """

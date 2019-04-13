@@ -1,5 +1,4 @@
 import pickle
-
 import os
 
 from entities.lists import Cart, Wishlist
@@ -27,10 +26,11 @@ class User:
         User.__instance = self
 
     @staticmethod
-    def place_order(payment_method):
+    def place_order(payment_method, offer):
         """
         places an order.
         :param payment_method: the payment method to be used.
+        :param offer: the offer chosen by the user.
         :return: True if order is placed successfully, False otherwise
         """
         return True
